@@ -1,4 +1,3 @@
---2021/2/26
 local herepos
 local flash
 local put
@@ -47,7 +46,7 @@ local qb = p33
 function main()
     reset()
     gettool(ta)
-    repeat--pss1
+    repeat
         r2l()
         ev1()
         ev2()
@@ -63,7 +62,6 @@ function main()
             evput()
             mput=mput+1
             bput=bput+1
-            l2r()
         else
             ev5()
             ev6(OFF,50)
@@ -93,7 +91,7 @@ function main()
             ev4()
             r2l()
             checkid()
-            if check == 65 then 
+            if check == 65 then
                 ev8()
             end
             evput()
@@ -101,8 +99,10 @@ function main()
         end
         l2r()
     until bput == 6
+	r2l()
     repeat
         ev1()--get Metal
+		l2r()
         ev6(OFF,50)
         puttool(ta)
         gettool(tc)
@@ -131,12 +131,13 @@ function main()
         ev5()
         r2l()
         checkid()
-        if check == 65 then 
+        if check == 65 then
             ev8()
         end
         evput()
         mput=mput-1
     until mput==0
+	l2r()
     puttool(ta)
     gos(4)
 end
@@ -144,6 +145,7 @@ end
 function reset()
     put = 0
     bput = 0
+	mput = 0
     check = 0
     flash = 0
     tool = 0
@@ -153,7 +155,7 @@ function reset()
     MotOn()
     herepos = getcart()
     if herepos.h == 0 then
-        r2l()
+        l2r()
     else
         gos(2)
         MovP(hr)
@@ -169,7 +171,7 @@ end
 function l2r()
     gos(1)
     MovP(hl)
-    MovP(hr) 
+    MovP(hr)
 end
 
 function Send(valu)
@@ -204,6 +206,7 @@ function puttool(tool)
 end
 
 function gettool(tool)
+	ts("QC",ON)
     path1(3,tr,tool,"QC",OFF,0,0,100)
 end
 
@@ -212,17 +215,17 @@ function getcut(tool)
     MovP(cr)
     MovL(tool+XYZC(-30,30,0,0))
     MovL(tool)
-    MovL(tool+Z(80))
+    MovL(tool+Z(70))
     ts("CP",ON)
-    MovL(tool+XYZC(-30,30,80,0))
+    MovL(tool+XYZC(-30,30,70,0))
     MovP(cr)
 end
 
 function putcut(tool)
     gos(3)
     MovP(cr)
-    MovL(tool+XYZC(-30,30,80,0))
-    MovL(tool+Z(80))
+    MovL(tool+XYZC(-30,30,70,0))
+    MovL(tool+Z(70))
     ts("CP",OFF)
     MovL(tool)
     MovL(tool+XYZC(-30,30,0,0))
@@ -234,16 +237,16 @@ function ts(tool,valu)
         DO(0,valu)
         WDI(0,valu)
     elseif tool == "QC" then
-        Delay(1000)
-        DO(16,vlau)
+        DO(16,valu)
+		Delay(500)
     elseif tool == "CP" then
-        Delay(1000)
-        DO(17,vlau)
+        DO(17,valu)
+		Delay(500)
     else
         Error("Wrong value,tool=",tool)
     end
-end 
- 
+end
+
 function path1(spos,rpos,loc,tool,valu,xo,yo,zo)
     gos(spos)
     MovP(rpos)
@@ -263,11 +266,11 @@ function path2(valu,id)
     MovL(v7)
     if valu == OFF then
         ts("CP",valu)
-        gos(id+1)    
+        gos(id+1)
     elseif valu == ON then
         gos(id+1)
         ts("CP",valu)
-    else 
+    else
         Error("Wrong value,valu=",valu)
     end
     MovL(v7+Z(-90))
@@ -277,7 +280,7 @@ end
 function checkid()
     Delay(200)
     Send(65)
-    checkid = DI(GiP)
+    check = DI(GiP)
     print("check=",DI(GiP))
 end
 
@@ -302,36 +305,38 @@ function ev1()
     if flash == 44 then
         path1(2,r8,v8,"vac",ON,0,0,30)
     elseif flash == 45 then
-        path1(1,br,b4,"vac",ON,100,70,28)
+        path1(1,br,b4,"vac",ON,90,-60,28)
     elseif flash == 46 then
-        path1(1,br,b5,"vac",ON,100,70,28)
+        path1(1,br,b5,"vac",ON,90,-60,28)
     elseif flash == 48 then
-        path1(1,br,b1,"vac",ON,100,70,28)
+        path1(1,br,b1,"vac",ON,90,-60,35)
     elseif flash == 49 then
-        path1(1,br,b2,"vac",ON,100,70,28)
-    else 
+        path1(1,br,b2,"vac",ON,90,-60,35)
+	elseif flash == 66 then
+        path1(1,br,b6,"vac",ON,90,-60,28)
+    else
         Error("Wrong value,flash =",flash)
     end
     gos(47)
-end    
+end
 
 function evput()
     gos(36)
     waitGT(36)
     flash = DI(GiP)
     if flash == 37 then
-        path1(1,br,b1,"vac",OFF,100,70,28)
+        path1(1,br,b1,"vac",OFF,90,-60,35)
     elseif flash == 38 then
-        path1(1,br,b2,"vac",OFF,100,70,28)
+        path1(1,br,b2,"vac",OFF,90,-60,35)
     elseif flash == 39 then
-        path1(1,br,b3,"vac",OFF,100,70,28)
+        path1(1,br,b3,"vac",OFF,90,-60,35)
     elseif flash == 41 then
-        path1(1,br,b4,"vac",OFF,100,70,28)
+        path1(1,br,b4,"vac",OFF,90,-60,28)
     elseif flash == 42 then
-        path1(1,br,b5,"vac",OFF,100,70,28)
+        path1(1,br,b5,"vac",OFF,90,-60,28)
     elseif flash == 67 then
-        path1(1,br,b6,"vac",OFF,100,70,28)
-    else 
+        path1(1,br,b6,"vac",OFF,90,-60,28)
+    else
         Error("Wrong value,flash =",flash)
     end
     gos(40)
