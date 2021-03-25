@@ -99,7 +99,9 @@ function main()
 		bput = bput+1
 	until bput == 6
 	ptool(ta)
+	MovP(hr)
 	gos(4)
+	Exit()
 end
 
 function rst()
