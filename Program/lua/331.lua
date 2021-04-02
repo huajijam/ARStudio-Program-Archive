@@ -190,7 +190,7 @@ function ts(t,v)
 	elseif t == "qc" then
 		Delay(800)
 		DO(16,v)
-	elseif t == "C" then
+	elseif t == "c" then
 		Delay(800)
 		DO(17,v)
 	else
