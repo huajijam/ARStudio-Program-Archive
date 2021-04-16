@@ -1,6 +1,6 @@
 # ARStudio Program Archive
 
-Running on ADTECH AR6215  
-WorkBench:CHL-JC-04-B  
-Only For Personal use  
-Tips: **AR Language(*.AR)** is Base on **lua**
+Running on ADTECH AR6215 Robot  
+WorkBench:**CHL-JC-04-B**  
+Only For Personal Use  
+Tips: **AR Language(*.AR files)** is Base on **lua**  
